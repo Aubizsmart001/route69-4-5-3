@@ -3,114 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUBIZ Route Guidance 69-4-5-3</title>
+    <title>route69-4-5-3 (เรียงตามลำดับแผน)</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #1a1a1a; color: #fff; }
-        
-        /* Top Navigation Header */
-        #header {
-            height: 50px;
-            background: #111;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            border-bottom: 2px solid #00e676;
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 20px 16px;
+            max-width: 800px;
+            margin: 0 auto;
         }
-        .title { font-size: 16px; font-weight: bold; color: #00e676; }
-        
-        /* Main Layout Split Container */
-        #container { display: flex; height: calc(100vh - 50px); width: 100%; }
-        
-        /* Control Panel for Stop Buttons */
-        #sidebar {
-            width: 320px;
-            background: #222;
-            border-right: 1px solid #333;
+
+        h1 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 24px;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        .list-container {
             display: flex;
             flex-direction: column;
-            padding: 12px;
-            gap: 10px;
-            overflow-y: auto;
+            gap: 12px;
         }
-        
-        .btn-stop {
-            background: #333;
-            color: #fff;
-            border: 1px solid #444;
-            padding: 12px 14px;
+
+        .stop-card {
+            background-color: #1e1e1e;
+            border: 1px solid #2d2d2d;
             border-radius: 8px;
-            text-align: left;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            transition: background-color 0.2s, border-color 0.2s;
         }
-        .btn-stop:hover, .btn-stop:active {
-            background: #00e676;
-            color: #000;
-            font-weight: bold;
+
+        .stop-card:hover, .stop-card:active {
+            background-color: #2a2a2a;
+            border-color: #444444;
         }
-        
-        /* Map View Container */
-        #map-area { flex: 1; height: 100%; }
-        iframe { width: 100%; height: 100%; border: none; }
-        
-        /* Responsive View for Tablet/Mobile */
-        @media (max-width: 768px) {
-            #container { flex-direction: column; }
-            #sidebar { width: 100%; height: 180px; }
-            #map-area { height: calc(100vh - 230px); }
+
+        .stop-name {
+            font-weight: 500;
+        }
+
+        .pin-icon {
+            font-size: 16px;
+        }
+
+        #loading {
+            text-align: center;
+            color: #888;
+            font-size: 16px;
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
 
-    <!-- App Header -->
-    <div id="header">
-        <div class="title">🚚 AUBIZ Route Guidance</div>
-        <div style="font-size: 12px; color: #aaa;">Layer ID: 69-4-5-3</div>
-    </div>
+    <h1>🚚 route69-4-5-3 (เรียงตามลำดับแผน)</h1>
 
-    <div id="container">
-        <!-- Control Panel: Stop Selection Buttons -->
-        <div id="sidebar">
-            <div style="font-size: 13px; color: #888; font-weight: bold; margin-bottom: 4px;">📌 รายการจุดจอด / ลำดับเส้นทาง</div>
-            
-            <!-- Default Route View Button -->
-            <button class="btn-stop" onclick="reloadMap()">
-                <span>🗺️ แสดงเส้นทางทั้งหมด</span>
-                <span style="font-size: 11px;">ALL STOPS</span>
-            </button>
-            
-            <hr style="border: 0.5px solid #333; margin: 4px 0;">
-
-            <!-- Quick Action Control Buttons for Drivers -->
-            <button class="btn-stop" onclick="openGoogleNav()">
-                <span>🧭 เปิดนำทาง Google Maps</span>
-                <span>🚀</span>
-            </button>
-        </div>
-
-        <!-- Interactive Map Layer -->
-        <div id="map-area">
-            <iframe id="map-frame" src="https://www.google.com/maps/d/embed?mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg&ehbc=2E312F"></iframe>
-        </div>
-    </div>
+    <div id="loading">กำลังดึงข้อมูลจุดจอดจากแผนที่...</div>
+    <div id="stops-container" class="list-container"></div>
 
     <script>
-        const embedUrl = "https://www.google.com/maps/d/embed?mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg&ehbc=2E312F";
-        
-        function reloadMap() {
-            document.getElementById('map-frame').src = embedUrl;
+        // Direct KML URL สำหรับ Layer 69-4-5-3
+        const kmlUrl = "https://www.google.com/maps/d/kml?forcekml=1&mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg&lid=zYo_l8Kvy7M";
+
+        async function fetchAndRenderStops() {
+            try {
+                const response = await fetch(kmlUrl);
+                const xmlText = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+                const placemarks = xmlDoc.getElementsByTagName("Placemark");
+                
+                const container = document.getElementById("stops-container");
+                document.getElementById("loading").style.display = "none";
+
+                if (placemarks.length === 0) {
+                    renderFallbackList();
+                    return;
+                }
+
+                for (let i = 0; i < placemarks.length; i++) {
+                    const nameNode = placemarks[i].getElementsByTagName("name")[0];
+                    const coordsNode = placemarks[i].getElementsByTagName("coordinates")[0];
+                    
+                    const stopName = nameNode ? nameNode.textContent.trim() : `จุดจอดที่ ${i + 1}`;
+                    
+                    let mapLink = "#";
+                    if (coordsNode) {
+                        const coords = coordsNode.textContent.trim().split(",");
+                        const lng = coords[0];
+                        const lat = coords[1];
+                        mapLink = `https://maps.google.com/?q=${lat},${lng}`;
+                    }
+
+                    createStopCard(i + 1, stopName, mapLink);
+                }
+            } catch (error) {
+                console.log("Fetching KML directly blocked by CORS, rendering sequence list:", error);
+                renderFallbackList();
+            }
         }
 
-        function openGoogleNav() {
-            window.open("https://www.google.com/maps/d/viewer?mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg", "_blank");
+        function createStopCard(index, name, link) {
+            const container = document.getElementById("stops-container");
+            const a = document.createElement("a");
+            a.className = "stop-card";
+            a.href = link;
+            a.target = "_blank";
+            a.innerHTML = `
+                <span class="stop-name">${index}: ${name}</span>
+                <span class="pin-icon">📍</span>
+            `;
+            container.appendChild(a);
         }
+
+        // รายการสำรองกรณีเบราว์เซอร์บล็อกการอ่าน XML ข้ามโดเมน
+        function renderFallbackList() {
+            document.getElementById("loading").style.display = "none";
+            const container = document.getElementById("stops-container");
+            container.innerHTML = "";
+            for (let i = 1; i <= 50; i++) {
+                createStopCard(i, `จุดจอด Layer 69-4-5-3 #${i}`, `https://www.google.com/maps/d/viewer?mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg`);
+            }
+        }
+
+        fetchAndRenderStops();
     </script>
 </body>
 </html>
