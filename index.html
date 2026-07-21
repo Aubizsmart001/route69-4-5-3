@@ -3,20 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUBIZ Champion Route - Layer 69-4-5-3</title>
+    <title>AUBIZ Route Guidance 69-4-5-3</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: sans-serif; }
-        #header { background: #1a1a1a; color: #fff; padding: 10px 16px; text-align: center; font-size: 14px; }
-        #map-container { height: calc(100vh - 40px); width: 100%; }
-        iframe { width: 100%; height: 100%; border: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #121212; color: #ffffff; }
+        
+        /* Navigation Header for Dashboard Tablet */
+        #nav-bar {
+            height: 48px;
+            background: #1e1e1e;
+            border-bottom: 2px solid #00e676;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .status-badge {
+            background: #00e676;
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* Map Display Area */
+        #map-frame {
+            width: 100%;
+            height: calc(100vh - 48px);
+            border: none;
+        }
     </style>
 </head>
 <body>
-    <div id="header">
-        <strong>AUBIZ Fleet Route Monitor</strong> | Route ID: 69-4-5-3
+
+    <!-- Header Control Bar -->
+    <div id="nav-bar">
+        <div>🚚 AUBIZ ROUTE GUIDANCE <span style="color: #888; font-weight: normal;">| Layer: 69-4-5-3</span></div>
+        <div class="status-badge">ACTIVE ROUTE</div>
     </div>
-    <div id="map-container">
-        <iframe src="https://www.google.com/maps/d/embed?mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg&ehbc=2E312F"></iframe>
-    </div>
+
+    <!-- Embedded Google My Maps Layer (Displays 50 Stops & Route Lines) -->
+    <iframe id="map-frame" src="https://www.google.com/maps/d/embed?mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg&ehbc=2E312F"></iframe>
+
+    <!-- Embedded KML Metadata Source for NUC Sync Engine -->
+    <script type="application/kml+xml" id="kml-metadata">
+      <?xml version="1.0" encoding="UTF-8"?>
+      <kml xmlns="http://www.opengis.net/kml/2.2">
+        <Document>
+          <name>Layer 69-4-5-3 Data Source</name>
+          <NetworkLink>
+            <name>69-4-5-3</name>
+            <Link>
+              <href><![CDATA[https://www.google.com/maps/d/kml?forcekml=1&mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg&lid=zYo_l8Kvy7M]]></href>
+            </Link>
+          </NetworkLink>
+        </Document>
+      </kml>
+    </script>
+
 </body>
 </html>
