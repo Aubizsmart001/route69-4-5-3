@@ -6,63 +6,111 @@
     <title>AUBIZ Route Guidance 69-4-5-3</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #121212; color: #ffffff; }
+        body, html { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #1a1a1a; color: #fff; }
         
-        /* Navigation Header for Dashboard Tablet */
-        #nav-bar {
-            height: 48px;
-            background: #1e1e1e;
-            border-bottom: 2px solid #00e676;
+        /* Top Navigation Header */
+        #header {
+            height: 50px;
+            background: #111;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 16px;
-            font-size: 14px;
-            font-weight: 600;
+            border-bottom: 2px solid #00e676;
         }
-        .status-badge {
+        .title { font-size: 16px; font-weight: bold; color: #00e676; }
+        
+        /* Main Layout Split Container */
+        #container { display: flex; height: calc(100vh - 50px); width: 100%; }
+        
+        /* Control Panel for Stop Buttons */
+        #sidebar {
+            width: 320px;
+            background: #222;
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+            gap: 10px;
+            overflow-y: auto;
+        }
+        
+        .btn-stop {
+            background: #333;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 12px 14px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .btn-stop:hover, .btn-stop:active {
             background: #00e676;
             color: #000;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
             font-weight: bold;
         }
         
-        /* Map Display Area */
-        #map-frame {
-            width: 100%;
-            height: calc(100vh - 48px);
-            border: none;
+        /* Map View Container */
+        #map-area { flex: 1; height: 100%; }
+        iframe { width: 100%; height: 100%; border: none; }
+        
+        /* Responsive View for Tablet/Mobile */
+        @media (max-width: 768px) {
+            #container { flex-direction: column; }
+            #sidebar { width: 100%; height: 180px; }
+            #map-area { height: calc(100vh - 230px); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Control Bar -->
-    <div id="nav-bar">
-        <div>🚚 AUBIZ ROUTE GUIDANCE <span style="color: #888; font-weight: normal;">| Layer: 69-4-5-3</span></div>
-        <div class="status-badge">ACTIVE ROUTE</div>
+    <!-- App Header -->
+    <div id="header">
+        <div class="title">🚚 AUBIZ Route Guidance</div>
+        <div style="font-size: 12px; color: #aaa;">Layer ID: 69-4-5-3</div>
     </div>
 
-    <!-- Embedded Google My Maps Layer (Displays 50 Stops & Route Lines) -->
-    <iframe id="map-frame" src="https://www.google.com/maps/d/embed?mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg&ehbc=2E312F"></iframe>
+    <div id="container">
+        <!-- Control Panel: Stop Selection Buttons -->
+        <div id="sidebar">
+            <div style="font-size: 13px; color: #888; font-weight: bold; margin-bottom: 4px;">📌 รายการจุดจอด / ลำดับเส้นทาง</div>
+            
+            <!-- Default Route View Button -->
+            <button class="btn-stop" onclick="reloadMap()">
+                <span>🗺️ แสดงเส้นทางทั้งหมด</span>
+                <span style="font-size: 11px;">ALL STOPS</span>
+            </button>
+            
+            <hr style="border: 0.5px solid #333; margin: 4px 0;">
 
-    <!-- Embedded KML Metadata Source for NUC Sync Engine -->
-    <script type="application/kml+xml" id="kml-metadata">
-      <?xml version="1.0" encoding="UTF-8"?>
-      <kml xmlns="http://www.opengis.net/kml/2.2">
-        <Document>
-          <name>Layer 69-4-5-3 Data Source</name>
-          <NetworkLink>
-            <name>69-4-5-3</name>
-            <Link>
-              <href><![CDATA[https://www.google.com/maps/d/kml?forcekml=1&mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg&lid=zYo_l8Kvy7M]]></href>
-            </Link>
-          </NetworkLink>
-        </Document>
-      </kml>
+            <!-- Quick Action Control Buttons for Drivers -->
+            <button class="btn-stop" onclick="openGoogleNav()">
+                <span>🧭 เปิดนำทาง Google Maps</span>
+                <span>🚀</span>
+            </button>
+        </div>
+
+        <!-- Interactive Map Layer -->
+        <div id="map-area">
+            <iframe id="map-frame" src="https://www.google.com/maps/d/embed?mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg&ehbc=2E312F"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const embedUrl = "https://www.google.com/maps/d/embed?mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg&ehbc=2E312F";
+        
+        function reloadMap() {
+            document.getElementById('map-frame').src = embedUrl;
+        }
+
+        function openGoogleNav() {
+            window.open("https://www.google.com/maps/d/viewer?mid=1MF_IOZtfP86uQmJ1WavJrCl16eIqeKg", "_blank");
+        }
     </script>
-
 </body>
 </html>
